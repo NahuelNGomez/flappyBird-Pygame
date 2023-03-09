@@ -40,6 +40,8 @@ class Game:
         self.score = 0
         self.playing = True
         self.background = pygame.image.load(os.path.join(self.dir_images, 'background.png'))
+        self.scoreBackground = pygame.image.load(os.path.join(self.dir_images, 'scoreBackground.png'))
+        self.restartButton = pygame.image.load(os.path.join(self.dir_images, 'restartButton.png'))
 
         pygame.mixer.music.load(os.path.join(self.dir_sounds, 'background.mp3'))
         pygame.mixer.music.set_volume(0.5)
@@ -143,13 +145,33 @@ class Game:
         for element in elements:
             element.stop()
 
+    def drawScoreBackground(self):
+        DEFAULT_IMAGE_SIZE = (SCORE_BACKGROUND_SIZE_X, SCORE_BACKGROUND_SIZE_Y)
+        self.scoreBackground = pygame.transform.scale(self.scoreBackground, DEFAULT_IMAGE_SIZE)
+        self.surface.blit(self.scoreBackground, ((WIDTH - SCORE_BACKGROUND_SIZE_X) // 2, (HEIGHT - SCORE_BACKGROUND_SIZE_Y) // 2))
+
+    def drawScore(self):
+        self.displayText("SCORE", SCORE_TEXT_SIZE, LIGHT_RED, WIDTH // 2 + SCROLLING_X, HEIGHT // 2 - 60)
+        self.displayText(str(self.score), SCORE_TEXT_SIZE, LIGHT_RED, WIDTH // 2 + SCROLLING_X, HEIGHT // 2-30)
+        self.displayText("BEST", SCORE_TEXT_SIZE, LIGHT_RED, WIDTH // 2 + SCROLLING_X, HEIGHT // 2 + 10)
+        self.displayText(str(self.bestScore), SCORE_TEXT_SIZE, LIGHT_RED, WIDTH // 2 + SCROLLING_X, HEIGHT // 2 + 40)
+
+    def drawButton(self):
+        DEFAULT_IMAGE_SIZE = (BUTTON_SIZE_X, BUTTON_SIZE_Y)
+        self.restartButton = pygame.transform.scale(self.restartButton, DEFAULT_IMAGE_SIZE)
+        self.surface.blit(self.restartButton, ((WIDTH - SCORE_BACKGROUND_SIZE_X) // 2 + 11, (HEIGHT - SCORE_BACKGROUND_SIZE_Y) // 2 - 60))
+
     def drawText(self):
-        self.displayText(str(self.score), 36, RED, WIDTH // 2, 40)
+        if self.playing:
+            self.displayText(str(self.score), 36, LIGHT_RED, WIDTH // 2, 40)
 
         if not self.playing:
-            self.displayText('GAME OVER', 20, RED, WIDTH // 2, HEIGHT // 2)
-            self.displayText('press R to restart', 20, RED, WIDTH // 2, 130)
-            self.displayText(self.bestScoreFormat(), 20, RED, WIDTH // 2, 200)
+            self.drawScoreBackground()
+            self.drawScore()
+            self.drawButton()
+            # self.displayText('GAME OVER', 20, RED, WIDTH // 2, HEIGHT // 2)
+            # self.displayText('press R to restart', 20, RED, WIDTH // 2, 130)
+            # self.displayText(self.bestScoreFormat(), 20, RED, WIDTH // 2, 200)
 
     def bestScoreFormat(self):
         return 'Best Score: {}'.format(self.bestScore)
