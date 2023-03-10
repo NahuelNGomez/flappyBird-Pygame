@@ -83,8 +83,12 @@ class Game:
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_SPACE:
                     self.player.jump()
-                if event.key == pygame.K_r and not self.playing:
+                if event.key == pygame.K_SPACE and not self.playing:
                     self.new()
+            if event.type == pygame.MOUSEBUTTONDOWN and not self.playing:
+                if INITIAL_POS_X_RETRY <= event.pos[POS_X] <= FINAL_POS_X_RETRY:
+                    if INITIAL_POS_Y_RETRY <= event.pos[POS_Y] <= FINAL_POS_Y_RETRY:
+                        self.new()
 
     def generatePipes(self):
         lastPosition = WIDTH + 100
